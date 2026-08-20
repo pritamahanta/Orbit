@@ -1,112 +1,195 @@
 # Orbit
 
-Orbit is a full‑stack MERN application built with a modular architecture that keeps frontend and backend separate for scalability and maintainability. It includes secure JWT authentication, image upload handling with Multer, and Cloudinary integration for cloud storage. The frontend uses Tailwind CSS for a modern, responsive UI.
+Orbit is a full-stack job portal and recruitment platform built with a separated frontend and backend architecture. It supports user registration, JWT-based authentication, company and job management, applicant tracking, file uploads via Cloudinary, and request rate limiting through Redis.
 
-## Table of Contents
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Environment Variables](#environment-variables)
-- [Installation & Running](#installation--running)
-  - [Backend](#backend)
-  - [Frontend](#frontend)
-- [Testing](#testing)
-- [Deployment Notes](#deployment-notes)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+## Overview
 
-## Features
-- Modular architecture with separate frontend and backend
-- JWT-based authentication and protected routes
-- Image uploads using Multer
-- Cloud storage integration with Cloudinary
-- Responsive UI built with Tailwind CSS
+This project is structured as a modern SaaS-style job platform with:
+- React + Vite frontend for the UI
+- Express + Node.js backend for APIs
+- MongoDB as the primary database
+- Redis for rate limiting and in-memory request tracking
+- Cloudinary for image upload storage
+- Docker Compose for local orchestration
+
+## Core Features
+- User signup/login with JWT authentication
+- Protected admin routes and authenticated access control
+- Company creation and management
+- Job posting, browsing, and filtering
+- Job application flow with applicant tracking
+- User profile updates and image upload support
+- Redis-backed rate limiting to prevent abuse
+- Dockerized local development setup
 
 ## Tech Stack
-- Frontend: React.js, Tailwind CSS
+- Frontend: React, Vite, Redux Toolkit, Tailwind CSS
 - Backend: Node.js, Express.js
-- Database: MongoDB
-- Authentication: JWT (JSON Web Tokens)
-- File Handling: Multer
-- Cloud Storage: Cloudinary
+- Database: MongoDB with Mongoose
+- Cache / rate limiting: Redis
+- Authentication: JWT
+- File storage: Cloudinary
+- Containerization: Docker + Docker Compose
 
 ## Project Structure
-Orbit/
-├── backend/           # Server-side code  
-│   ├── controllers/   # Request handlers  
-│   ├── models/        # Database models  
-│   ├── routes/        # API routes  
-│   └── server.js      # Server entry point  
-└── frontend/          # Client-side code  
-    ├── components/    # React components  
-    ├── pages/         # React pages  
-    └── tailwind.config.js # Tailwind CSS configuration
+
+```text
+orbit/
+├── backend/
+│   ├── config/
+│   │   └── redis.js
+│   ├── controllers/
+│   ├── middlewares/
+│   │   ├── isAuthenticated.js
+│   │   ├── multer.js
+│   │   └── rateLimiter.js
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   │   ├── cloudinary.js
+│   │   ├── datauri.js
+│   │   └── db.js
+│   ├── .env
+│   ├── Dockerfile
+│   ├── index.js
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   ├── .env
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── vite.config.js
+│   └── index.html
+├── docker-compose.yml
+├── README.md
+└── .gitignore
+```
 
 ## Prerequisites
-- Node.js v14+ (recommended latest LTS)
-- npm (comes with Node.js)
-- MongoDB (local instance or MongoDB Atlas)
-- Cloudinary account for image storage
+
+Before running the app locally, ensure you have:
+- Node.js 18+ or newer
+- npm
+- Docker and Docker Compose
+- MongoDB Atlas or a local MongoDB instance
+- Cloudinary account
+- Redis (optional if using Docker Compose)
 
 ## Environment Variables
 
-Create a `.env` file in the `backend` directory with the following variables:
-
-```
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-CLOUDINARY_URL=your_cloudinary_url
-PORT=5000
-```
-
-- MONGO_URI: MongoDB connection string (local or Atlas)
-- JWT_SECRET: Secret for signing JWT tokens
-- CLOUDINARY_URL: Cloudinary connection URL (or set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET depending on your Cloudinary setup)
-- PORT: Optional, default server port (e.g., 5000)
-
-## Installation & Running
-
-Open two terminals (one for backend, one for frontend) or use a process manager to run both.
-
 ### Backend
-1. Navigate to the backend directory:
-   cd backend
-2. Install dependencies:
-   npm install
-3. Create the `.env` file (see Environment Variables).
-4. Start the backend server:
-   npm start
-   - If your project uses a dev script like nodemon, run:
-     npm run dev
+Create a `.env` file inside `backend/`:
 
-The backend will start on the port defined in your `.env` (default 5000).
+```env
+PORT=8000
+MONGODB_URI=your_mongodb_connection_string
+SECRET_KEY=your_jwt_secret
+CLOUD_NAME=your_cloudinary_cloud_name
+API_KEY=your_cloudinary_api_key
+API_SECRET=your_cloudinary_api_secret
+REDIS_URL=redis://redis:6379
+```
+
+Notes:
+- `PORT` is the Express server port.
+- `MONGODB_URI` connects the backend to MongoDB.
+- `SECRET_KEY` is used to sign JWT tokens.
+- `REDIS_URL` is required for Redis-backed rate limiting.
+- Cloudinary values are used for image uploads.
 
 ### Frontend
-1. Navigate to the frontend directory:
-   cd frontend
-2. Install dependencies:
-   npm install
-3. Start the frontend development server:
-   npm start
+Create a `.env` file inside `frontend/`:
 
-The frontend will typically run on http://localhost:3000 and should be configured to communicate with the backend API (check any proxy or REACT_APP_API_URL settings).
+```env
+VITE_BACKEND_URL=http://localhost:8000/api/v1
+```
 
-## Testing
-- Backend: Use Postman, Insomnia, or curl to test API endpoints (authentication, image upload routes, CRUD).
-- Frontend: Open the app in a browser at http://localhost:3000 and verify authentication flows, upload flow, and responsiveness across devices.
+This is used by the React app to call the backend API.
 
-## Deployment Notes
-- Ensure environment variables are set in your hosting platform (Heroku, Vercel, Render, DigitalOcean, etc.).
-- For Cloudinary, use secure environment variables for API keys.
-- Serve the frontend as a static build (npm run build) and either host separately (Netlify/Vercel) or configure your backend to serve static files from the `frontend/build` folder for a single‑server deployment.
+## Run with Docker Compose
 
-## Contributing
-Contributions are welcome! Suggested workflow:
-1. Fork the repository
-2. Create a feature branch: git checkout -b feature/your-feature
-3. Commit your changes: git commit -m "Add feature"
-4. Push and open a pull request
+From the project root:
 
-Please include clear descriptions and any relevant testing notes in your PR.
+```bash
+docker compose up --build
+```
+
+This starts:
+- Backend: http://localhost:8000
+- Frontend: http://localhost:5173
+- Redis: localhost:6379
+
+To stop services:
+
+```bash
+docker compose down
+```
+
+## Run Manually
+
+### 1) Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+The backend starts on port `8000` by default.
+
+### 2) Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev -- --host 0.0.0.0
+```
+
+The frontend is served on:
+- http://localhost:5173
+
+## API Base URL
+
+```text
+http://localhost:8000/api/v1
+```
+
+Main route groups:
+- `/api/v1/user`
+- `/api/v1/company`
+- `/api/v1/job`
+- `/api/v1/application`
+
+## Docker Files
+
+The repository includes container setup for both app layers:
+- `backend/Dockerfile`
+- `frontend/Dockerfile`
+- `docker-compose.yml`
+
+The backend Dockerfile runs the Express app directly, while the frontend Dockerfile runs the Vite dev server for local development.
+
+## Important Implementation Notes
+
+- Redis is initialized in `backend/config/redis.js` and used in `backend/middlewares/rateLimiter.js`.
+- The app uses `ioredis` with `REDIS_URL` configured for request throttling.
+- Authentication middleware is enforced for protected company, job, and application routes.
+- File uploads are handled with Multer and Cloudinary integration.
+- CORS is configured to allow the frontend origin: `http://localhost:5173`.
+
+## Current Status
+
+This project is configured for local development and Docker-based orchestration. There is no production deployment configuration or automated test suite configured in the repo at the moment.
+
+## Recommended Workflow
+
+1. Copy the required `.env` values into both backend and frontend.
+2. Start dependencies with Docker Compose or Redis + MongoDB manually.
+3. Start backend and frontend.
+4. Access the app at http://localhost:5173.
+5. Use the backend API at http://localhost:8000/api/v1.
+
+## License
+
+This project currently does not specify a license file. Add one before production use if you plan to distribute the code publicly.
+
