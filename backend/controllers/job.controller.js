@@ -1,6 +1,5 @@
 import { Job } from "../models/job.model.js";
 
-// admin post krega job
 export const postJob = async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
@@ -34,7 +33,7 @@ export const postJob = async (req, res) => {
         return res.status(500).json({ message: "Server error", success: false });
     }
 }
-// student k liye
+
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";

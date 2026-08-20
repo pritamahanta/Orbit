@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice.js";
 import { Loader2 } from "lucide-react";
+console.log(USER_API_END_POINT);
 
 export const Login = () => {
 

@@ -22,7 +22,7 @@ export const register = async (req, res) => {
         if (file) {
             fileUri = getDataUri(file);
             cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-            console.log("Cloudinary upload response:", cloudResponse);
+            // console.log("Cloudinary upload response:", cloudResponse);
         }
 
         const existingUser = await User.findOne({ email });
@@ -67,13 +67,14 @@ export const login = async (req, res) => {
     try {
         const { email, password, role } = req.body;
 
-        console.log({ email, password, role });
+        // console.log({ email, password, role });
         if (!email || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
             });
         };
+
         let user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
@@ -89,7 +90,9 @@ export const login = async (req, res) => {
                 success: false,
             })
         };
+
         // check role is correct or not
+
         if (role.toLowerCase() !== user.role.toLowerCase()) {
             console.log(role, user.role);
             return res.status(400).json({
@@ -167,9 +170,8 @@ export const updateProfile = async (req, res) => {
         if (bio) user.profile.bio = bio
         if (skills) user.profile.skills = skillsArray
 
-        // resume comes later here...
         if (cloudResponse) {
-            user.profile.resume = cloudResponse.secure_url; // updating resume
+            user.profile.resume = cloudResponse.secure_url;
             user.profile.resumeOriginalName = file.originalname;
         }
 
