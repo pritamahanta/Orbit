@@ -61,6 +61,7 @@ orbit/
 │   ├── vite.config.js
 │   └── index.html
 ├── docker-compose.yml
+├── LICENSE
 ├── README.md
 └── .gitignore
 ```
@@ -191,5 +192,5 @@ This project is configured for local development and Docker-based orchestration.
 
 ## License
 
-This project currently does not specify a license file. Add one before production use if you plan to distribute the code publicly.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for full details.
 
