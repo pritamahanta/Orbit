@@ -1,8 +1,8 @@
 import { Job } from "../models/job.model.js";
 import redis from "../config/redis.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
-export const postJob = async (req, res) => {
-    try {
+export const postJob = asyncHandler( async (req, res) => {
         const {
             title,
             description,
@@ -61,18 +61,9 @@ export const postJob = async (req, res) => {
             success: true
         });
 
-    } catch (error) {
-        console.log(error);
+}) ;
 
-        return res.status(500).json({
-            message: "Server error",
-            success: false
-        });
-    }
-};
-
-export const getAllJobs = async (req, res) => {
-    try {
+export const getAllJobs = asyncHandler ( async (req, res) => {
         const keyword = req.query.keyword || "";
 
         // check redis ;
@@ -116,15 +107,11 @@ export const getAllJobs = async (req, res) => {
             success: true,
             source: "mongodb"
         })
-    } 
-    catch (error) {
-        console.log(error);
-          return res.status(500).json({ message: "Server error", success: false });
-    }
-}
+});
+
 // student
-export const getJobById = async (req, res) => {
-  try {
+export const getJobById = asyncHandler( async (req, res) => {
+ 
     const jobId = req.params.id;
 
     const cache_key = `job:${jobId}` ;
@@ -159,15 +146,10 @@ export const getJobById = async (req, res) => {
         success: true,
         source: "mongodb" 
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server error", success: false });
-  }
-};
+});
 
-// admin kitne job create kra hai abhi tk
-export const getAdminJobs = async (req, res) => {
-    try {
+export const getAdminJobs = asyncHandler( async (req, res) => {
+   
         const adminId = req.id;
         const jobs = await Job.find({ created_by: adminId }).populate({
             path:'company',
@@ -183,13 +165,10 @@ export const getAdminJobs = async (req, res) => {
             jobs,
             success: true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
+});
 
-export const updateJob = async (req, res) => {
-    try {
+export const updateJob = asyncHandler( async (req, res) => {
+
         const {
             title,
             description,
@@ -251,13 +230,4 @@ export const updateJob = async (req, res) => {
             job: updatedJob,
             success: true
         });
-
-    } catch (error) {
-         console.log("UPDATE JOB ERROR:", error);
-
-    return res.status(500).json({
-        message: error.message,
-        success: false
-    });
-    }
-};
+});

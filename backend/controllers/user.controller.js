@@ -3,68 +3,64 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/datauri.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
-export const register = async (req, res) => {
-    try {
-        const { fullName, email, phoneNumber, password, role } = req.body;
+export const register = asyncHandler(async (req, res) => {
+    const { fullName, email, phoneNumber, password, role } = req.body;
 
-        if (!fullName || !email || !phoneNumber || !password || !role) {
-            return res.status(400).json({
-                message: "Something is missing",
-                success: false
-            });
-        }
-
-        const file = req.file;
-        let fileUri;
-        let cloudResponse;
-
-        if (file) {
-            fileUri = getDataUri(file);
-            cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-            // console.log("Cloudinary upload response:", cloudResponse);
-        }
-
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({
-                message: 'User already exists with this email.',
-                success: false,
-            });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await User.create({
-            fullName,
-            email,
-            phoneNumber,
-            password: hashedPassword,
-            role,
-        });
-
-        if (cloudResponse) {
-            newUser.profile = {
-                ...newUser.profile,
-                profilePhoto: cloudResponse.secure_url
-            };
-            await newUser.save();
-        }
-
-        return res.status(201).json({
-            message: "Account created successfully.",
-            success: true
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Something went wrong",
+    if (!fullName || !email || !phoneNumber || !password || !role) {
+        return res.status(400).json({
+            message: "Something is missing",
             success: false
         });
     }
-}
-export const login = async (req, res) => {
-    try {
+
+    const file = req.file;
+    let fileUri;
+    let cloudResponse;
+
+    if (file) {
+        fileUri = getDataUri(file);
+        cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+        return res.status(400).json({
+            message: "User already exists with this email.",
+            success: false,
+        });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+        fullName,
+        email,
+        phoneNumber,
+        password: hashedPassword,
+        role,
+    });
+
+    if (cloudResponse) {
+        newUser.profile = {
+            ...newUser.profile,
+            profilePhoto: cloudResponse.secure_url
+        };
+
+        await newUser.save();
+    }
+
+    return res.status(201).json({
+        message: "Account created successfully.",
+        success: true
+    });
+});
+
+
+export const login = asyncHandler( async (req, res) => {
+
         const { email, password, role } = req.body;
 
         // console.log({ email, password, role });
@@ -120,22 +116,18 @@ export const login = async (req, res) => {
             user,
             success: true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const logout = async (req, res) => {
-    try {
+});
+
+export const logout = asyncHandler( async (req, res) => {
+  
         return res.status(200).cookie("token", "", { maxAge: 0 }).json({
             message: "Logged out successfully.",
             success: true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const updateProfile = async (req, res) => {
-    try {
+})
+
+export const updateProfile = asyncHandler( async (req, res) => {
+  
         const { fullName, email, phoneNumber, bio, skills } = req.body;
 
         // cloudinary ayega idhar
@@ -193,7 +185,4 @@ export const updateProfile = async (req, res) => {
             user,
             success: true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
+});
