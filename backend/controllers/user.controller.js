@@ -8,13 +8,6 @@ import asyncHandler from "../utils/asyncHandler.js";
 export const register = asyncHandler(async (req, res) => {
     const { fullName, email, phoneNumber, password, role } = req.body;
 
-    if (!fullName || !email || !phoneNumber || !password || !role) {
-        return res.status(400).json({
-            message: "Something is missing",
-            success: false
-        });
-    }
-
     const file = req.file;
     let fileUri;
     let cloudResponse;
