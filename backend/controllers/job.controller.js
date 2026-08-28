@@ -10,7 +10,7 @@ export const postJob = async (req, res) => {
             salary,
             location,
             jobType,
-            experienceLevel,
+            experience,
             position,
             companyId
         } = req.body;
@@ -26,7 +26,7 @@ export const postJob = async (req, res) => {
             !salary ||
             !location ||
             !jobType ||
-            !experienceLevel ||
+            !experience ||
             !position ||
             !companyId
         ) {
@@ -40,10 +40,10 @@ export const postJob = async (req, res) => {
             title,
             description,
             requirements,
-            salary: Number(salary),
+            salary,
             location,
             jobType,
-            experienceLevel,
+            experience,
             position,
             company: companyId,
             created_by: userId
@@ -187,3 +187,77 @@ export const getAdminJobs = async (req, res) => {
         console.log(error);
     }
 }
+
+export const updateJob = async (req, res) => {
+    try {
+        const {
+            title,
+            description,
+            requirements,
+            salary,
+            location,
+            jobType,
+            experienceLevel,
+            position
+        } = req.body;
+
+        const { jobId } = req.params;
+        const userId = req.id;
+
+        const job = await Job.findById(jobId);
+
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found.",
+                success: false
+            });
+        }
+
+        // Make sure only the owner/admin who created the job can edit it
+        if (job.created_by.toString() !== userId) {
+            return res.status(403).json({
+                message: "You are not authorized to update this job.",
+                success: false
+            });
+        }
+
+        const updatedJob = await Job.findByIdAndUpdate(
+            jobId,
+            {
+                title,
+                description,
+                requirements,
+                salary,
+                location,
+                jobType,
+                experienceLevel,
+                position
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        // Clear cached jobs
+        const keys = await redis.keys("jobs:*");
+
+        if (keys.length > 0) {
+            await redis.del(keys);
+        }
+
+        return res.status(200).json({
+            message: "Job updated successfully.",
+            job: updatedJob,
+            success: true
+        });
+
+    } catch (error) {
+         console.log("UPDATE JOB ERROR:", error);
+
+    return res.status(500).json({
+        message: error.message,
+        success: false
+    });
+    }
+};

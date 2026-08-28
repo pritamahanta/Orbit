@@ -38,11 +38,13 @@ export default function NavBar() {
 
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
                 {/* left part */}
+               <Link to ='/'>
                 <div>
                     <h1 className="text-3xl font-bold">
                         <span className="text-[#cc1212] ">O</span>rbit
                     </h1>
                 </div>
+               </Link>
                 {/* right part */}
                 <div className='flex items-center gap-12' >
                     <ul className='flex font-medium gap-5'>

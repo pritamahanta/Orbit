@@ -26,7 +26,7 @@ export const Profile = () => {
           <div className='flex items-center gap-6'>
             <Avatar>
               <AvatarImage
-                src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
+                src= {user?.profile?.profilePhoto || "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"}
                 alt="profile"
                 className='h-20 w-20 rounded-full'
               />

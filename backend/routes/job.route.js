@@ -1,6 +1,6 @@
 import express from "express";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
-import { getAdminJobs, getAllJobs, getJobById, postJob } from "../controllers/job.controller.js";
+import { getAdminJobs, getAllJobs, getJobById, postJob, updateJob } from "../controllers/job.controller.js";
 import rateLimiter from "../middlewares/rateLimiter.js";
 
 
@@ -10,5 +10,6 @@ router.route("/post").post(isAuthenticated, postJob);
 router.route("/get").get( getAllJobs);
 router.route("/getadminjobs").get(isAuthenticated, getAdminJobs);
 router.route("/get/:id").get(getJobById);
+router.route("/update/:jobId").put( isAuthenticated, updateJob);
 
 export default router;

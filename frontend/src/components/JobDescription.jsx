@@ -83,7 +83,7 @@ export const JobDescription = () => {
                 <h1 className='font-bold my-1'>Location: <span className='pl-4 text-gray-800 font-medium'>{singleJob?.location}</span></h1>
                 <h1 className='font-bold my-1'>Description: <span className='pl-4 text-gray-800 font-medium'> {singleJob?.description} </span> </h1>
                 <h1 className='font-bold my-1'>Experience: <span className='pl-4 text-gray-800 font-medium'>{singleJob?.experienceLevel}</span></h1>
-                <h1 className='font-bold my-1'>Salary: <span className='pl-4 text-gray-800 font-medium'>{singleJob?.salary} LPA</span></h1>
+                <h1 className='font-bold my-1'>Salary: <span className='pl-4 text-gray-800 font-medium'>{singleJob?.salary}</span></h1>
                 <h1 className='font-bold my-1'>Total Applicants: <span className='pl-4 text-gray-800 font-medium'> {Array.isArray(singleJob?.applications) ? 
                 singleJob.applications.length : 0} </span></h1>
                 <h1 className='font-bold my-1'>Posted Data: <span className='pl-4 text-gray-800 font-medium'>{singleJob?.createdAt}</span></h1>

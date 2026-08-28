@@ -50,7 +50,7 @@ export const JobCard = ({job}) => {
       <div className='flex items-center gap-2 mt-3'>
         <Badge className="font-bold text-[#cc1212]" variant="ghost">{job?.position} Positions</Badge>
         <Badge className="font-bold text-[#220c9d]" variant="ghost">{job?.jobType}</Badge>
-        <Badge className="font-bold text-[#027512]" variant="ghost" >{job?.salary} LPA</Badge>
+        <Badge className="font-bold text-[#027512]" variant="ghost" >{job?.salary}</Badge>
       </div>
       <div className='flex items-center gap-3 mt-5 '>
         <Button variant = "ghost" className= " hover:bg-gray-200" onClick = {() => navigate(`/description/${job?._id}`)}>Details</Button>
