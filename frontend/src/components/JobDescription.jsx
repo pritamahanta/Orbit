@@ -11,6 +11,8 @@ import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from '@/utils/constants'
 export const JobDescription = () => {
     const params = useParams();
     const jobId = params.id;
+
+    console.log(jobId) ;
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
     const dispatch = useDispatch();

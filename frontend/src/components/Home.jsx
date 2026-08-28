@@ -18,6 +18,9 @@ export const Home = () => {
     if(user?.role == "Recruiter") {
       navigate("/admin/companies") ;
     }
+    else {
+      navigate("/");
+    }
   }, [])
   useGetAllJobs() ;
   return (

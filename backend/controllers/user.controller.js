@@ -115,7 +115,7 @@ export const login = async (req, res) => {
             profile: user.profile
         }
 
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
+        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
             message: `Welcome back ${user.fullName}`,
             user,
             success: true
@@ -145,7 +145,9 @@ export const updateProfile = async (req, res) => {
 
         if (file) {
             fileUri = getDataUri(file); // the file is being converted into an uri 
-            cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+            cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+                resource_type: "raw",
+            });
             console.log("Cloudinary upload response:", cloudResponse);
         }
 
