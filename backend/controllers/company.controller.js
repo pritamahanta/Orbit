@@ -1,9 +1,10 @@
 import { Company } from "../models/company.model.js";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
-export const registerCompany = async (req, res) => {
-    try {
+export const registerCompany = asyncHandler( async (req, res) => {
+
         const { companyName } = req.body;
         if (!companyName) {
             return res.status(400).json({
@@ -28,12 +29,10 @@ export const registerCompany = async (req, res) => {
             company,
             success: true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const getCompany = async (req, res) => {
-    try {
+});
+
+export const getCompany = asyncHandler( async (req, res) => {
+
         const userId = req.id; // logged in user id
         const companies = await Company.find({ userId });
         if (!companies) {
@@ -45,14 +44,12 @@ export const getCompany = async (req, res) => {
         return res.status(200).json({
             companies,
             success: true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+        })   
+});
+
 // get company by id
-export const getCompanyById = async (req, res) => {
-    try {
+export const getCompanyById = asyncHandler( async (req, res) => {
+   
         const companyId = req.params.id;
       
         const company = await Company.findById(companyId);
@@ -66,12 +63,11 @@ export const getCompanyById = async (req, res) => {
             company,
             success: true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const updateCompany = async (req, res) => {
-  try {
+});
+
+
+export const updateCompany = asyncHandler( async (req, res) => {
+  
     const { name, description, website, location } = req.body;
 
     let logo;
@@ -101,11 +97,4 @@ export const updateCompany = async (req, res) => {
       success: true,
       company,
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Something went wrong.",
-      success: false,
-    });
-  }
-};
+});

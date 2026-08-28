@@ -1,8 +1,9 @@
 import { Application } from "../models/application.model.js";
 import { Job } from "../models/job.model.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
-export const applyJob = async (req, res) => {
-    try {
+export const applyJob = asyncHandler( async (req, res) => {
+
         const userId = req.id;
         const jobId = req.params.id;
         if (!jobId) {
@@ -40,13 +41,11 @@ export const applyJob = async (req, res) => {
         return res.status(201).json({
             message:"Job applied successfully.",
             success:true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-};
-export const getAppliedJobs = async (req,res) => {
-    try {
+        }) 
+});
+
+export const getAppliedJobs = asyncHandler( async (req,res) => {
+    
         const userId = req.id;
         const application = await Application.find({applicant:userId}).sort({createdAt:-1}).populate({
             path:'job',
@@ -66,13 +65,11 @@ export const getAppliedJobs = async (req,res) => {
             application,
             success:true
         })
-    } catch (error) {
-        console.log(error);
-    }
-}
+});
+
 // admin dekhega kitna user ne apply kiya hai
-export const getApplicants = async (req,res) => {
-    try {
+export const getApplicants = asyncHandler( async (req,res) => {
+   
         const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
             path:'applications',
@@ -91,12 +88,10 @@ export const getApplicants = async (req,res) => {
             job, 
             succees:true 
         });
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const updateStatus = async (req,res) => {
-    try {
+});
+
+export const updateStatus = asyncHandler( async (req,res) => {
+   
         const {status} = req.body;
         const applicationId = req.params.id;
         if(!status){
@@ -125,8 +120,4 @@ export const updateStatus = async (req,res) => {
             message:"Status updated successfully.",
             success:true
         });
-
-    } catch (error) {
-        console.log(error);
-    }
-}
+});
