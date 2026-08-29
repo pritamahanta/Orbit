@@ -49,34 +49,102 @@ const appRouter = createBrowserRouter([
     element: <Profile />
   },
   // Admin stuffs starts here 
-  {
+ {
     path: "/admin/companies",
-    element: <ProtectedRoute><Companies /></ProtectedRoute>
-  },
-  {
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <Companies />
+        </ProtectedRoute>
+    )
+},
+{
     path: "/admin/companies/create",
-    element: <ProtectedRoute> <CreateCompany /> </ProtectedRoute>
-  },
-  {
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <CreateCompany />
+        </ProtectedRoute>
+    )
+},
+{
     path: "/admin/companies/:id",
-    element: <ProtectedRoute>  <CompanySetup /></ProtectedRoute>
-  },
-  {
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <CompanySetup />
+        </ProtectedRoute>
+    )
+},
+{
     path: "/admin/jobs",
-    element: <ProtectedRoute><AdminJobs /></ProtectedRoute>
-  },
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <AdminJobs />
+        </ProtectedRoute>
+    )
+},
 {
     path: "/admin/jobs/:jobId",
-    element: <ProtectedRoute><EditJob/></ProtectedRoute>
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <EditJob />
+        </ProtectedRoute>
+    )
 },
-  {
+{
     path: "/admin/jobs/create",
-    element: <ProtectedRoute><PostJob /></ProtectedRoute>
-  },
-  {
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <PostJob />
+        </ProtectedRoute>
+    )
+},
+{
     path: "/admin/jobs/:id/applicants",
-    element: <ProtectedRoute><Applicants /></ProtectedRoute>
-  }
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <Applicants />
+        </ProtectedRoute>
+    )
+},
+ {
+    path: "/admin/companies/:id",
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <CompanySetup />
+        </ProtectedRoute>
+    )
+},
+ {
+    path: "/admin/jobs",
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <AdminJobs />
+        </ProtectedRoute>
+    )
+},
+{
+    path: "/admin/jobs/:jobId",
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <EditJob />
+        </ProtectedRoute>
+    )
+},
+{
+    path: "/admin/jobs/create",
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <PostJob />
+        </ProtectedRoute>
+    )
+},
+ {
+    path: "/admin/jobs/:id/applicants",
+    element: (
+        <ProtectedRoute allowedRoles={["Recruiter"]}>
+            <Applicants />
+        </ProtectedRoute>
+    )
+}
 ])
 
 
